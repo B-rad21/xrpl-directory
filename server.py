@@ -12,8 +12,8 @@ app.middleware("http")(
         path="/directory",
         price=os.getenv("XRPL_PRICE_DROPS", "5000"),
         pay_to_address=os.getenv("XRPL_PAY_TO"),
-        facilitator_url=os.getenv("XRPL_FACILITATOR_URL", "https://xrpl-facilitator-testnet.t54.ai"),
-        network=os.getenv("XRPL_NETWORK", "xrpl:1"),
+        facilitator_url=os.getenv("XRPL_FACILITATOR_URL", "https://xrpl-facilitator-mainnet.t54.ai"),
+        network=os.getenv("XRPL_NETWORK", "xrpl:0"),
         asset="XRP",
         description="Curated list of XRPL x402 services",
         extra={"sourceTag": int(os.getenv("XRPL_SOURCE_TAG", "20260601"))},
@@ -24,36 +24,43 @@ app.middleware("http")(
 async def directory():
     return {
         "network": "XRPL",
-        "updated": "2026-10-13",
-        "note": "Static curated snapshot. Verify endpoints and prices before use. Expand as you discover more.",
+        "updated": "2026-10-18",
+        "note": "Curated mix of ClawBank XRPL proxies and direct Heurist Mesh tools. Pay the listed amount to receive the full list.",
         "services": [
             {
-                "name": "Heurist Inference Router",
-                "endpoint": "https://example-heurist-xrpl.placeholder",
+                "name": "ClawBank Exa Search",
+                "endpoint": "https://app.clawbank.co/x402/proxy/exa-search",
                 "approx_price": "sub-cent RLUSD or XRP",
-                "category": "AI inference",
-                "notes": "High-volume pay-per-call inference on XRPL via x402"
+                "category": "web search",
+                "notes": "Neural web search via ClawBank XRPL gateway"
             },
             {
-                "name": "Heurist Mesh",
-                "endpoint": "https://example-heurist-mesh.placeholder",
+                "name": "ClawBank Tavily Search",
+                "endpoint": "https://app.clawbank.co/x402/proxy/tavily-search",
+                "approx_price": "sub-cent RLUSD or XRP",
+                "category": "web search",
+                "notes": "AI-oriented web search via ClawBank XRPL gateway"
+            },
+            {
+                "name": "ClawBank Token Price",
+                "endpoint": "https://app.clawbank.co/x402/proxy/token-price",
+                "approx_price": "sub-cent RLUSD or XRP",
+                "category": "market data",
+                "notes": "Token price lookup via ClawBank XRPL gateway"
+            },
+            {
+                "name": "Heurist Project Search",
+                "endpoint": "https://mesh.heurist.xyz/x402/xrpl/agents/AIXBTProjectInfoAgent/search_projects",
                 "approx_price": "RLUSD",
-                "category": "AI tools / data",
-                "notes": "Tool calls for token data, market summaries, DeFi metrics"
+                "category": "crypto research",
+                "notes": "Direct Heurist Mesh tool — search crypto projects"
             },
             {
-                "name": "AskSurf (market intelligence)",
-                "endpoint": "https://example-asksurf.placeholder",
-                "approx_price": "XRP",
-                "category": "finance / research",
-                "notes": "Per-request market questions with AI synthesis"
-            },
-            {
-                "name": "ClawBank XRPL Gateway",
-                "endpoint": "https://app.clawbank.co/x402",
-                "approx_price": "RLUSD or XRP",
-                "category": "gateway / catalog",
-                "notes": "Exposes broader x402 catalog payable on XRPL"
+                "name": "Heurist Market Summary",
+                "endpoint": "https://mesh.heurist.xyz/x402/xrpl/agents/AIXBTProjectInfoAgent/get_market_summary",
+                "approx_price": "RLUSD",
+                "category": "market data",
+                "notes": "Direct Heurist Mesh tool — recent market summary"
             }
         ]
     }
@@ -63,5 +70,3 @@ async def health():
     return {"status": "ok", "service": "xrpl-x402-directory"}
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
